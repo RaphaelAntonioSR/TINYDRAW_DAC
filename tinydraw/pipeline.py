@@ -43,6 +43,9 @@ def executar_programa(texto: str, pasta_saida=None, nome_base: str = "desenho",
     Erros de análise ou compilação devolvem o estado parcial, sem prévia.
     """
     pasta = Path(pasta_saida) if pasta_saida else caminhos.pasta_saida_padrao()
+    # O executável roda com cwd=pasta: seu caminho precisa ser absoluto para
+    # evitar repetir uma pasta relativa durante a resolução pelo Windows.
+    pasta = pasta.resolve()
     pasta.mkdir(parents=True, exist_ok=True)
     arq_td = pasta / f"{nome_base}.td"
     arq_td.write_text(texto, encoding="utf-8")

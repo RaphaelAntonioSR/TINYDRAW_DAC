@@ -42,6 +42,10 @@ def tokenizar(texto: str) -> Tuple[List[Token], List[Diagnostico]]:
 
     Limites de coordenadas são regras semânticas, não regras do scanner.
     """
+    # Editores Windows podem acrescentar BOM ao UTF-8. Ele não faz parte da DSL
+    # e só é ignorado no início, preservando a coluna 1 do primeiro comando.
+    if texto.startswith("\ufeff"):
+        texto = texto[1:]
     tokens: List[Token] = []
     diags: List[Diagnostico] = []
     linha, inicio_linha = 1, 0

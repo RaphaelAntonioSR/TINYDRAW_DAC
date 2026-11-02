@@ -917,13 +917,12 @@ py ferramentas/ppm_para_png.py build/estudo/estudo.ppm 40
 Invoke-Item build/estudo/estudo.png
 ```
 
-**Estado desta revisão:** a análise e a geração de C foram executadas; a
-compilação, o executável e o PPM deste exemplo não foram produzidos neste
-ambiente, que não tinha GCC/cc/clang. A sequência acima é a validação a realizar
-no computador da apresentação. Não apresente a previsão abaixo como imagem
-observada nesta revisão.
+**Validação final realizada:** a fonte foi analisada, o C foi compilado com
+GCC 16.2.0 e o executável produziu PPM e PNG. Todos os 24 pixels do exemplo
+foram comparados com a grade abaixo, incluindo sobreposição e interior branco.
+A imagem real está em [estudo.png](evidencias/estudo.png).
 
-Previsão da grade final, onde V é vermelho, A azul e ponto é branco:
+Grade final conferida, onde V é vermelho, A azul e ponto é branco:
 
 ```text
       x=012345
@@ -938,7 +937,7 @@ O pixel (1,1), inicialmente vermelho no canto do retângulo, fica azul pelo pont
 da linha 9. O interior (2,2) permanece branco. O retângulo termina em (4,3),
 então a coluna 5 é azul exclusivamente pela vertical.
 
-| Coordenada | RGB previsto | Justificativa |
+| Coordenada | RGB verificado | Justificativa |
 |---|---|---|
 | (0,0) | (255,0,0) | Horizontal vermelha |
 | (5,0) | (0,0,255) | Vertical azul sobre a horizontal |
@@ -1224,8 +1223,8 @@ nem confirme histórico apenas porque um texto antigo o mencionava.
 **50. Quais são os limites atuais mais relevantes?**
 DSL sem expressões/laços e sem figuras curvas nativas; parser sem recuperação;
 tela e paleta limitadas; leitor PPM restrito; assistente local limitado a regras;
-GCC necessário. Nesta revisão também restam validações
-de compilação C, imagem de ponta a ponta e pacote Windows.
+GCC necessário. A compilação C e os pixels foram validados na etapa final. O pacote Windows
+com PyInstaller continua pendente de construção e teste.
 
 ## Parte 12 — Roteiro prático de demonstração e estudo
 
@@ -1251,9 +1250,8 @@ py -m unittest tests.test_gui_smoke -v
 Remove-Item Env:TINYDRAW_TESTE_GUI
 ```
 
-O teste de GUI existente deve ser executado em processo separado: ele ajusta
-HOME/USERPROFILE internamente. Não reutilize esse processo como sessão pessoal.
-Depois confira a pasta de saída e exportação manualmente.
+O teste de GUI usa uma pasta temporária isolada para a saída. Depois confira
+a pasta de saída e a exportação também no computador da apresentação.
 
 ### Demonstração sugerida, cerca de 12 a 15 minutos
 
@@ -1307,10 +1305,8 @@ py -m tinydraw build/demo-erros/semantico.td --so-c -o build/demo-erros/saida-se
 ```
 
 O primeiro arquivo aponta `@`; o segundo aponta falta de `por`; o terceiro
-aponta cor não declarada. Evite criar fontes com BOM: o lexer atual não ignora
-esse marcador, que também seria diagnosticado como caractere inesperado.
-O Windows PowerShell 5.1 inclui BOM em `Set-Content -Encoding utf8`; o comando
-Python acima evita essa diferença de ambiente.
+aponta cor não declarada. O lexer aceita BOM somente no início de uma fonte UTF-8, mantendo a coluna
+1 do primeiro comando. O comando Python acima também funciona sem esse marcador.
 
 As pastas de saída precisam estar vazias ou ainda não existir. Os erros devem
 impedir gerar C novo. Não aponte arquivos de tentativas anteriores como resultado
@@ -1359,5 +1355,5 @@ menos um caso de cada fase e uma correspondência de pixels. Se alguém conhece
 só “sua parte”, retomem o fluxo completo antes de apresentar.
 
 Antes da entrega, preencham o memorial e o uso real de IA, leiam o relatório
-de limitações e executem as pendências de GCC e empacotamento no ambiente final.
+de limitações e repitam a validação de GCC no ambiente final e confiram o empacotamento, se usado.
 Não apresentem como verificado o que foi apenas previsto por este guia.

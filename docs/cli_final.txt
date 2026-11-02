@@ -1,0 +1,50 @@
+análise concluída (0 aviso(s)); C gerado em: C:\Users\martt\tranqueiras\TinyDraw_revisado\tinydraw_projeto\build\cli_final\casa.c
+$ C:\msys64\ucrt64\bin\gcc.EXE -std=c99 -Wall -Wextra -o C:\Users\martt\tranqueiras\TinyDraw_revisado\tinydraw_projeto\build\cli_final\casa.exe C:\Users\martt\tranqueiras\TinyDraw_revisado\tinydraw_projeto\build\cli_final\casa.c C:\Users\martt\tranqueiras\TinyDraw_revisado\tinydraw_projeto\runtime\tinydraw.c -IC:\Users\martt\tranqueiras\TinyDraw_revisado\tinydraw_projeto\runtime
+executável gerado: C:\Users\martt\tranqueiras\TinyDraw_revisado\tinydraw_projeto\build\cli_final\casa.exe
+$ C:\Users\martt\tranqueiras\TinyDraw_revisado\tinydraw_projeto\build\cli_final\casa.exe
+
+[linha 2] tela 40 por 20
+[linha 4] cor PAREDE = (200, 120, 40) simbolo P
+[linha 5] cor TELHADO = (255, 0, 0) simbolo T
+[linha 6] cor PORTA = (0, 0, 255) simbolo O
+[linha 7] cor SOL = (255, 200, 0) simbolo S
+[linha 9] usar PAREDE
+[linha 10] retangulo em (8, 9) tamanho 20 x 10
+[linha 12] usar TELHADO
+[linha 13] linha (6, 8) -> (30, 8)
+[linha 14] linha (8, 7) -> (28, 7)
+[linha 15] linha (10, 6) -> (26, 6)
+[linha 16] linha (12, 5) -> (24, 5)
+[linha 17] linha (14, 4) -> (22, 4)
+[linha 18] linha (16, 3) -> (20, 3)
+[linha 19] ponto em (18, 2)
+[linha 21] usar PORTA
+[linha 22] retangulo em (16, 14) tamanho 4 x 5
+[linha 24] usar SOL
+[linha 25] retangulo em (34, 1) tamanho 3 x 3
+[linha 26] ponto em (35, 2)
+[linha 28] salvar casa.ppm
+
+Legenda: '.' = fundo, 'P' = PAREDE, 'T' = TELHADO, 'O' = PORTA, 'S' = SOL
++----------------------------------------+
+|........................................|
+|..................................SSS...|
+|..................T...............SSS...|
+|................TTTTT.............SSS...|
+|..............TTTTTTTTT.................|
+|............TTTTTTTTTTTTT...............|
+|..........TTTTTTTTTTTTTTTTT.............|
+|........TTTTTTTTTTTTTTTTTTTTT...........|
+|......TTTTTTTTTTTTTTTTTTTTTTTTT.........|
+|........PPPPPPPPPPPPPPPPPPPP............|
+|........P..................P............|
+|........P..................P............|
+|........P..................P............|
+|........P..................P............|
+|........P.......OOOO.......P............|
+|........P.......O..O.......P............|
+|........P.......O..O.......P............|
+|........P.......O..O.......P............|
+|........PPPPPPPPOOOOPPPPPPPP............|
+|........................................|
++----------------------------------------+

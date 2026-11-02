@@ -8,6 +8,16 @@ def tipos(txt):
 
 
 class TestLexer(unittest.TestCase):
+    def test_bom_inicial_preserva_tokens_e_colunas(self):
+        esperado, _ = tokenizar('tela 6 por 4')
+        recebido, diags = tokenizar('\ufefftela 6 por 4')
+        self.assertEqual(diags, [])
+        self.assertEqual(recebido, esperado)
+
+    def test_bom_no_meio_continua_invalido(self):
+        _, diags = tokenizar('tela 6 \ufeffpor 4')
+        self.assertTrue(diags)
+
     def test_palavras_reservadas_e_literais(self):
         t, d = tipos('tela 40 por 20 cor AZUL = 0, 0, 255 salvar "a.ppm"')
         self.assertEqual(d, [])

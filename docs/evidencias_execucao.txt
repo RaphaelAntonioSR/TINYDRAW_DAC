@@ -1,0 +1,24 @@
+casa.td: todas as etapas OK; 40x20; PPM e PNG produzidos pelo fluxo real.
+estudo.td: todas as etapas OK; 6x4; PPM e PNG produzidos pelo fluxo real.
+moldura.td: todas as etapas OK; 30x15; PPM e PNG produzidos pelo fluxo real.
+sobreposicao.td: todas as etapas OK; 24x12; PPM e PNG produzidos pelo fluxo real.
+
+Autoteste:
+TinyDraw Studio 1.0.0
+Python 3.12.14 (código-fonte)
+Recursos em: C:\Users\martt\tranqueiras\TinyDraw_revisado\tinydraw_projeto
+Biblioteca C (runtime/tinydraw.c): OK
+Exemplos: OK
+Compilador C: C:\msys64\ucrt64\bin\gcc.EXE
+   gcc.EXE (Rev6, Built by MSYS2 project) 16.2.0
+Pasta de saída: C:\Users\martt\TinyDrawStudio\saida
+
+  [OK      ] Léxico
+  [OK      ] Sintaxe
+  [OK      ] Semântica
+  [OK      ] Gerar C
+  [OK      ] Compilar C
+  [OK      ] Executar
+  [OK      ] Imagem
+
+RESULTADO: tudo funcionando.

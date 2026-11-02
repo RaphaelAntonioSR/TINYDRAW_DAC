@@ -122,8 +122,8 @@ gcc --version
 
 Feche a janela de teste do Tkinter. Se `py` não existir, ajuste a instalação ou
 use o caminho absoluto de um Python instalado. Os `.bat` dependem de `py`.
-O executor também procura `cc` e `clang`. Nesta revisão nenhum compilador C foi
-encontrado, portanto o C não foi validado por um compilador.
+O executor também procura `cc` e `clang`. Na validação final foi usado GCC 16.2.0 (MSYS2 UCRT64), com compilação,
+execução e conferência de imagens. Veja [a validação final](docs/VALIDACAO_FINAL.md).
 
 Se o GCC não estiver no PATH, informe um caminho **sem argumentos**:
 
@@ -234,3 +234,5 @@ Use pastas limpas para demonstrar essa propriedade.
 
 Preencham o memorial e as verificações pessoais antes da entrega. O material
 recebido não permite atribuir responsabilidades históricas aos integrantes.
+
+A validação mais recente, com GCC e interface completa, está em [VALIDACAO_FINAL.md](docs/VALIDACAO_FINAL.md). Fontes UTF-8 com BOM inicial também são aceitas.

@@ -1,3 +1,5 @@
+> Registro da etapa anterior. A validação posterior com GCC está em [VALIDACAO_FINAL.md](VALIDACAO_FINAL.md); as limitações de compilador descritas abaixo eram do ambiente anterior.
+
 # Revisão atual — remoção da integração online
 
 Data: 02/11/2026. Alterações aplicadas diretamente em

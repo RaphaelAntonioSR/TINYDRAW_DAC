@@ -15,6 +15,15 @@ def estados(res):
 
 
 class TestEtapas(unittest.TestCase):
+    @unittest.skipIf(CC is None, "compilador C indisponível")
+    def test_saida_relativa_com_espacos(self):
+        with tempfile.TemporaryDirectory(prefix='saida teste ', dir='.') as tmp:
+            pasta = Path(os.path.relpath(tmp))
+            res = pipeline.executar_programa(OK, pasta, 'programa teste')
+            self.assertTrue(res.executou, res.log_compilacao + res.saida_execucao)
+            self.assertIsNotNone(res.png)
+            self.assertTrue(res.exe.is_absolute())
+
     def rodar(self, texto):
         return pipeline.executar_programa(texto, tempfile.mkdtemp(), "t")
 
