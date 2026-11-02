@@ -16,11 +16,11 @@ comentários e testes, reescrever o README e preparar o guia de estudos.
 As verificações efetivamente executadas pelo agente estão no relatório.
 Elas não equivalem a verificações realizadas pessoalmente pelos estudantes.
 
-Os arquivos originais mencionavam uso de Claude em várias etapas do desenvolvimento
-e testes de mutação anteriores. O ZIP, sozinho, não permite confirmar esse histórico.
-A equipe deve registrar o que realmente ocorreu, sem adotar aquelas afirmações
-automaticamente. A integração opcional com Claude no produto é verificável no código;
-isso é diferente de identificar quem ou qual ferramenta escreveu cada módulo.
+O recurso online existente no ZIP original foi removido por solicitação do
+usuário. Essa retirada não altera a obrigação de declarar ferramentas usadas no
+desenvolvimento. O histórico anterior ao ZIP não foi fornecido e não pode ser
+reconstituído a partir dele. O aplicativo atual oferece somente assistente local
+por regras, sem serviço externo de geração.
 
 ## Registro a completar pela equipe antes da entrega
 

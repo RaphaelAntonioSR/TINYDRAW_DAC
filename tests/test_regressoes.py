@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from tinydraw import config, executor, imagem
+from tinydraw import executor, imagem
 from tinydraw.cli import principal
 from tinydraw.compilador import transpilar
 
@@ -32,14 +32,6 @@ class TestRegressoes(unittest.TestCase):
         self.assertFalse(r.sucesso)
         self.assertEqual(r.erros[0].fase, 'léxico')
         self.assertIsNone(r.codigo_c)
-
-    def test_config_json_que_nao_e_objeto(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp) / 'config.json'
-            with mock.patch.object(config, 'ARQUIVO', p):
-                for texto in ('[]', 'null', '42', '"texto"', '{'):
-                    p.write_text(texto, encoding='utf-8')
-                    self.assertEqual(config.carregar(), {})
 
     def test_arquivo_incompativel_windows(self):
         for nome in ('NUL.ppm', 'con.ppm', 'COM1.ppm', 'a?.ppm', 'a*.ppm', 'a|b.ppm', 'a\x00.ppm'):

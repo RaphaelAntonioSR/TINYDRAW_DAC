@@ -131,11 +131,9 @@ o mesmo `executor`. A conversão PNG é feita no Python depois da execução C.
 | `tinydraw/pipeline.py` | Resultado completo e estados mostrados no Studio |
 | `tinydraw/gui.py` | Widgets, eventos, abas e coordenação de trabalho |
 | `tinydraw/assistente.py` | Seleção do gerador de texto e resultado comum |
-| `tinydraw/ia_local.py` | Regras locais que escrevem `.td` |
-| `tinydraw/ia_claude.py` | Cliente HTTP, extração de código e tentativas de correção |
+| `tinydraw/assistente_local.py` | Regras locais que escrevem `.td` |
 | `tinydraw/imagem.py` | Leitura do P6 do runtime e codificação PNG |
 | `tinydraw/caminhos.py` | Recursos no fonte e no pacote PyInstaller |
-| `tinydraw/config.py` | Preferências JSON do Studio |
 | `runtime/tinydraw.h` | Tipos e protótipos públicos da biblioteca C |
 | `runtime/tinydraw.c` | Paleta, grade de pixels, figuras, PPM e ASCII |
 | `tests/` | Casos automatizados válidos, inválidos e de integração |
@@ -150,7 +148,7 @@ para C. GCC faz a etapa seguinte até o código de máquina.
 
 Um interpretador executa as operações da linguagem a partir de sua representação,
 sem precisar produzir o programa C deste fluxo. TinyDraw não interpreta os
-comandos de desenho em Python para gerar o PPM. `ia_local.interpretar` tem esse
+comandos de desenho em Python para gerar o PPM. `assistente_local.interpretar` tem esse
 nome porque interpreta um pedido em português; seu retorno é fonte `.td`, não
 uma imagem. O nome da função não muda a arquitetura do compilador.
 
@@ -515,7 +513,7 @@ O interior nunca é preenchido por essa função.
 `main` testa se `td_criar` retornou NULL e encerra com erro se faltou memória.
 Depois de salvar, libera o vetor de pixels e o canvas. A biblioteca verifica
 alguns limites defensivamente, mas é usada com dados previamente validados.
-Não é uma API C genérica completamente protegida contra qualquer chamada manual.
+Não é uma interface C genérica completamente protegida contra qualquer chamada manual.
 
 Adicionar verificações no runtime não substitui a semântica: a mensagem deve
 apontar o comando `.td` antes de o usuário esperar pela compilação.
@@ -644,7 +642,7 @@ da validação sintática ou das regras geométricas.
 
 ### Assistente local
 
-`assistente.gerar` encaminha para `gerar_local` ou `gerar_com_claude`.
+`assistente.gerar` encaminha para `gerar_local`.
 O modo local é um sistema de regras, sem modelo treinado e sem rede.
 `normalizar` usa Unicode NFD, remove marcas de acento, põe minúsculas e ajusta
 espaços. `interpretar` encontra tela, divide a frase por palavras de figuras,
@@ -667,30 +665,7 @@ analisador semântico. Uma frase pode gerar um programa válido que não corresp
 perfeitamente à intenção do usuário; aceitação do compilador não prova fidelidade
 da interpretação de linguagem natural.
 
-### Integração opcional com Claude
-
-`ia_claude.py` usa `urllib.request`, JSON e um prompt com a gramática. A
-requisição vai ao endpoint Messages da Anthropic com chave e versão de API.
-`ConfigClaude` guarda chave, modelo, limite de tokens e timeout. Não há SDK
-externo. Os nomes de modelos são sugestões editáveis; acesso real depende da conta.
-
-`extrair_codigo` usa o primeiro bloco de código, ou o texto inteiro se não houver
-bloco. `gerar_com_claude` chama o serviço e valida a resposta com `transpilar`.
-Se houver erros, inclui os diagnósticos nas mensagens seguintes para pedir
-correção. Há **três tentativas totais**, e não três correções além da primeira.
-Ao esgotá-las, devolve o último código com `valido=False` para edição manual.
-
-Com “continuar do desenho atual”, a requisição inclui o programa do editor.
-Sem essa opção envia apenas o pedido e o contexto do prompt. O modo não foi
-chamado com credenciais reais nesta revisão; os testes interceptam HTTP e
-simulam respostas, falhas de rede, 401 e truncamento.
-
-### Configuração, recursos e empacotamento
-
-`config.carregar` lê o JSON e devolve um dicionário, ou `{}` em falha ou estrutura
-incompatível. `config.salvar` grava preferências; a chave só é incluída quando
-o usuário marca a opção de lembrar. O armazenamento é texto simples, conforme
-o próprio rótulo da interface informa.
+### Recursos e empacotamento
 
 `caminhos.raiz_recursos` usa a raiz do fonte ou `_MEIPASS` quando empacotado.
 PyInstaller deve incluir `runtime/` e `exemplos/` como dados. A biblioteca C
@@ -699,7 +674,7 @@ O `--autoteste` do ponto de entrada também grava um arquivo para consulta no
 pacote sem console.
 
 **Prática:** deixe o assistente de lado, abra um `.td` e execute F5. Explique
-por que o compilador continua completo mesmo sem API ou interpretação de pedidos.
+por que o compilador continua completo mesmo sem interpretação de pedidos.
 
 ## Parte 9 — Estudo das interfaces do código
 
@@ -804,23 +779,18 @@ recurso com falha. A UI usa essa diferença para não pintar tudo como erro.
 
 | Função/classe | Entrada | Saída/efeito e relação |
 |---|---|---|
-| `assistente.gerar` | modo,pedido,chave,modelo,codigo_atual,progresso | `ResultadoGeracao`; rejeita pedido vazio e escolhe gerador |
-| `ia_local.normalizar` | texto | Texto minúsculo, sem marcas de acento |
-| `ia_local.Figura` | tipo e atributos | Modelo temporário do pedido, não nó da AST TinyDraw |
-| `ia_local.interpretar` | pedido | `(codigo_td, notas)` ou ErroAssistente |
-| `ia_local._layout` | figuras,tela,notas | W,H e figuras posicionadas/ajustadas |
-| `ia_local.Emissor` | chamadas de figuras | Acumula declarações e corpo `.td` |
-| `ia_local.gerar_local` | pedido,callback de progresso | Fonte + validade + log após transpilar |
-| `ia_claude.ConfigClaude` | chave,modelo,max_tokens,timeout_s | Configuração da chamada HTTP |
-| `ia_claude.chamar_claude` | config,mensagens,sistema | Texto da API ou ErroAssistente |
-| `ia_claude.extrair_codigo` | resposta | String `.td` candidata |
-| `ia_claude.gerar_com_claude` | pedido,config,codigo_atual,progresso | Fonte validada ou último código rejeitado |
+| `assistente.gerar` | pedido,progresso | `ResultadoGeracao`; valida pedido vazio e chama o gerador local |
+| `assistente_local.normalizar` | texto | Texto minúsculo, sem marcas de acento |
+| `assistente_local.Figura` | tipo e atributos | Modelo temporário do pedido, não nó da AST TinyDraw |
+| `assistente_local.interpretar` | pedido | `(codigo_td, notas)` ou ErroAssistente |
+| `assistente_local._layout` | figuras,tela,notas | W,H e figuras posicionadas/ajustadas |
+| `assistente_local.Emissor` | chamadas de figuras | Acumula declarações e corpo `.td` |
+| `assistente_local.gerar_local` | pedido,callback de progresso | Fonte + validade + log após transpilar |
 | `gui.App` | sem parâmetros públicos adicionais | Janela com estado de editor, fila e resultado |
 | `App.acao_gerar` | campos da UI | Inicia assistente e, ao concluir, execução |
 | `App.acao_executar` | texto do editor | Inicia pipeline em thread |
 | `App._mostrar_resultado` | ResultadoExecucao | Atualiza prévia, C, diagnósticos e tags |
 | `App.acao_salvar_imagem` | escolha em diálogo | Copia PNG ampliado ou PPM original |
-| `config.carregar/salvar` | arquivo global / dicionário | Leitura/gravação de preferências |
 | `caminhos.pasta_runtime/pasta_exemplos` | nenhum | Paths no fonte ou em `_MEIPASS` |
 | `caminhos.pasta_saida_padrao` | nenhum | Pasta de saída do usuário |
 | `tinydraw_studio.main` | sys.argv | UI ou autoteste com retorno inteiro |
@@ -1167,12 +1137,11 @@ Isso só prova parte do caminho. É possível gerar uma chamada C com coordenada
 errada que ainda compila. Os testes de pixels e sobreposição procuram falhas
 semânticas da tradução que o compilador C não detectaria.
 
-### Studio, IA e perguntas difíceis
+### Studio e perguntas difíceis
 
-**35. A IA desenha diretamente?**
-Não. Ela fornece texto TinyDraw. Esse texto passa pelo mesmo léxico, parser,
-semântica, gerador e executor. Mesmo um desenho solicitado por API só aparece
-depois do fluxo de C; o modo local também segue essa regra.
+**35. O assistente local desenha diretamente?**
+Não. Ele fornece texto TinyDraw. A fonte passa pelo léxico, parser, semântica,
+gerador e executor. A imagem só existe depois da execução do C.
 
 **36. O assistente local é uma rede neural?**
 Não. É um conjunto de regex, regras geométricas e modelos de composição.
@@ -1184,8 +1153,8 @@ O assistente aproxima um disco com segmentos horizontais de larguras
 variáveis. O `.td` resultante só contém ponto/linha e outros comandos básicos.
 Não foi adicionada uma produção `circulo` à gramática.
 
-**38. Aceitar o `.td` da IA prova que ela entendeu o pedido?**
-Não. O compilador prova conformidade com as regras implementadas. A IA pode
+**38. Aceitar o `.td` do assistente prova que ele entendeu o pedido?**
+Não. O compilador prova conformidade com as regras implementadas. O assistente pode
 gerar um desenho válido diferente do pedido. Conferir a intenção e o resultado
 continua sendo uma atividade humana.
 
@@ -1241,10 +1210,10 @@ de formato. Strings são escapadas, e caminhos/nomes Windows inválidos são
 rejeitados. Não use isso para afirmar que toda entrada arbitrária está
 formalmente provada segura.
 
-**48. Se um arquivo de preferências contiver `[]`, o que ocorre?**
-Na revisão, `config.carregar` confere se o JSON é um dicionário e usa `{}`
-caso contrário. Antes, a interface tentaria `.get` em uma lista. É um exemplo
-de formato JSON válido que não satisfaz o contrato da aplicação.
+**48. Por que o assistente não altera o desenho atual automaticamente?**
+Cada pedido gera um novo programa por regras locais. Para alterar um desenho já
+existente, edite o `.td` no editor e execute novamente. Isso mantém observável a
+relação entre os comandos escritos e a imagem.
 
 **49. Como declarar o uso de IA sem inventar autoria?**
 Registre ferramentas e finalidades reais, identifique os arquivos e relate
@@ -1255,7 +1224,7 @@ nem confirme histórico apenas porque um texto antigo o mencionava.
 **50. Quais são os limites atuais mais relevantes?**
 DSL sem expressões/laços e sem figuras curvas nativas; parser sem recuperação;
 tela e paleta limitadas; leitor PPM restrito; assistente local limitado a regras;
-API externa opcional; GCC necessário. Nesta revisão também restam validações
+GCC necessário. Nesta revisão também restam validações
 de compilação C, imagem de ponta a ponta e pacote Windows.
 
 ## Parte 12 — Roteiro prático de demonstração e estudo
@@ -1356,7 +1325,7 @@ retorna AST completa; o semântico retorna AST, mas não C.
 4. Exporte PNG e PPM em **Salvar imagem** e abra o PNG salvo.
 5. Abra cada exemplo inválido pelo menu Exemplos, execute e explique a aba
    Diagnósticos e as linhas marcadas. Retorne ao válido antes de continuar.
-6. Escolha o modo local, peça um quadrado vermelho e mostre o `.td` produzido.
+6. Peça um quadrado vermelho no assistente local e mostre o `.td` produzido.
 7. Mostre a barra do mesmo compilador sendo usada no código gerado pelo assistente.
 
 Tokens e AST são demonstrados pela CLI/ferramenta; a interface atual não tem

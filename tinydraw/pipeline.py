@@ -120,7 +120,6 @@ def diagnostico_ambiente() -> str:
         f"Compilador C: {cc if cc else 'NÃO ENCONTRADO - instale o gcc (veja o README)'}",
         f"   {versao_cc}" if versao_cc else "",
         f"Pasta de saída: {caminhos.pasta_saida_padrao()}",
-        "Chave ANTHROPIC_API_KEY no ambiente: " + ("sim" if os.environ.get("ANTHROPIC_API_KEY") else "não"),
     ]).replace("\n\n", "\n")
 
 

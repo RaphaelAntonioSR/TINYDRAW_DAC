@@ -1,7 +1,7 @@
 """TinyDraw Studio: interface gráfica (tkinter) do projeto.
 
 Fluxo mostrado na tela:
-  pedido -> assistente (IA Claude ou regras locais) -> programa .td -> léxico -> sintaxe
+  pedido -> assistente local por regras -> programa .td -> léxico -> sintaxe
   -> semântica -> C -> compilador C -> executável -> imagem
 O assistente só escreve o programa .td; o desenho vem sempre do C gerado pelo transpilador.
 """
@@ -15,12 +15,7 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
-from . import __version__, assistente, caminhos, config, pipeline
-from .ia_claude import MODELOS_SUGERIDOS
-
-MODOS = {"IA Claude (API)": assistente.MODO_CLAUDE,
-         "Assistente local (offline)": assistente.MODO_LOCAL}
-
+from . import __version__, assistente, caminhos, pipeline
 PEDIDOS_EXEMPLO = [
     "uma casa azul, uma árvore e um sol",
     "tela 60 por 30, retângulo preenchido azul de 20 por 8 em 5, 4 e círculo amarelo de raio 6 em 40, 8",
@@ -56,8 +51,6 @@ Medidas: "10 por 5", lado, raio, diametro, base, largura, altura. (x, y) = canto
 esquerdo da figura. Posições nomeadas: centro, topo, base, esquerda, direita e os 4 cantos.
 Sem posição, as figuras são distribuídas automaticamente.
 
-IA CLAUDE (modo online): descreva livremente; precisa de chave de API (console.anthropic.com).
-Se o compilador rejeitar o programa da IA, os erros voltam para ela corrigir (até 3 tentativas).
 """
 
 
@@ -67,7 +60,6 @@ class App(tk.Tk):
         self.title(f"TinyDraw Studio {__version__} — pedido → programa .td → C → imagem")
         self.geometry("1340x840")
         self.minsize(1080, 700)
-        self.cfg = config.carregar()
         self.fila: "queue.Queue" = queue.Queue()
         self._ocupado = False
         self._foto = None
@@ -79,7 +71,6 @@ class App(tk.Tk):
         self._montar_etapas()
         self._montar_centro()
         self._montar_rodape()
-        self._atualizar_modo()
         self._carregar_inicial()
         self.bind("<F5>", lambda _e: self.acao_executar())
         self.protocol("WM_DELETE_WINDOW", self._fechar)
@@ -131,30 +122,7 @@ class App(tk.Tk):
         caixa = ttk.LabelFrame(self, text=" Assistente: descreva o desenho em português ", padding=8)
         caixa.pack(fill="x", padx=8, pady=(8, 4))
 
-        l1 = ttk.Frame(caixa)
-        l1.pack(fill="x")
-        ttk.Label(l1, text="Modo:").pack(side="left")
-        rotulo_inicial = next((r for r, v in MODOS.items() if v == self.cfg.get("modo")), None)
-        tem_chave = bool(self.cfg.get("chave") or os.environ.get("ANTHROPIC_API_KEY"))
-        self.var_modo = tk.StringVar(value=rotulo_inicial or (
-            "IA Claude (API)" if tem_chave else "Assistente local (offline)"))
-        self.cb_modo = ttk.Combobox(l1, textvariable=self.var_modo, values=list(MODOS),
-                                    state="readonly", width=26)
-        self.cb_modo.pack(side="left", padx=(4, 12))
-        self.cb_modo.bind("<<ComboboxSelected>>", lambda _e: self._atualizar_modo())
-
-        ttk.Label(l1, text="Modelo:").pack(side="left")
-        self.var_modelo = tk.StringVar(value=self.cfg.get("modelo", MODELOS_SUGERIDOS[0]))
-        self.cb_modelo = ttk.Combobox(l1, textvariable=self.var_modelo, values=MODELOS_SUGERIDOS, width=20)
-        self.cb_modelo.pack(side="left", padx=(4, 12))
-
-        ttk.Label(l1, text="Chave de API:").pack(side="left")
-        self.var_chave = tk.StringVar(value=self.cfg.get("chave", ""))
-        self.en_chave = ttk.Entry(l1, textvariable=self.var_chave, show="•", width=30)
-        self.en_chave.pack(side="left", padx=(4, 6))
-        self.var_lembrar = tk.BooleanVar(value=bool(self.cfg.get("lembrar")))
-        self.ck_lembrar = ttk.Checkbutton(l1, text="lembrar neste PC (texto simples)", variable=self.var_lembrar)
-        self.ck_lembrar.pack(side="left")
+        ttk.Label(caixa, text="Assistente local por regras, sem conexão com serviços externos.").pack(anchor="w")
 
         l2 = ttk.Frame(caixa)
         l2.pack(fill="x", pady=(8, 0))
@@ -169,14 +137,8 @@ class App(tk.Tk):
         self.bt_exec = ttk.Button(botoes, text="Executar código  (F5)", command=self.acao_executar)
         self.bt_exec.pack(fill="x", pady=(4, 0))
 
-        l3 = ttk.Frame(caixa)
-        l3.pack(fill="x", pady=(4, 0))
-        self.var_continuar = tk.BooleanVar(value=False)
-        self.ck_continuar = ttk.Checkbutton(
-            l3, text="continuar do desenho atual (a IA altera o programa do editor)", variable=self.var_continuar)
-        self.ck_continuar.pack(side="left")
-        ttk.Label(l3, text="   A IA só escreve o programa .td; quem desenha é o C gerado pelo transpilador.",
-                  foreground="#5f6368").pack(side="left")
+        ttk.Label(caixa, text="O assistente escreve .td; o C gerado pelo transpilador produz a imagem.",
+                  foreground="#5f6368").pack(anchor="w", pady=(4, 0))
 
     def _montar_etapas(self):
         barra = ttk.Frame(self)
@@ -254,12 +216,6 @@ class App(tk.Tk):
             ttk.Button(rod, text=texto, command=cmd).pack(side="right", padx=3)
 
     # ------------------------------------------------------------------ utilidades de UI
-    def _atualizar_modo(self):
-        claude = MODOS[self.var_modo.get()] == assistente.MODO_CLAUDE
-        estado = "normal" if claude else "disabled"
-        for w in (self.cb_modelo, self.en_chave, self.ck_lembrar, self.ck_continuar):
-            w.configure(state=estado)
-
     def _escrever(self, widget, texto):
         widget.configure(state="normal")
         widget.delete("1.0", "end")
@@ -362,24 +318,15 @@ class App(tk.Tk):
         if self._ocupado:
             return
         pedido = self.txt_pedido.get("1.0", "end").strip()
-        modo = MODOS[self.var_modo.get()]
-        chave = self.var_chave.get().strip() or os.environ.get("ANTHROPIC_API_KEY", "")
-        modelo = self.var_modelo.get().strip()
-        atual = self._texto_editor() if (self.var_continuar.get() and modo == assistente.MODO_CLAUDE) else None
         if not pedido:
             messagebox.showinfo("Pedido vazio", "Escreva o que você quer desenhar.")
-            return
-        if modo == assistente.MODO_CLAUDE and not chave:
-            messagebox.showwarning(
-                "Chave de API", "O modo IA Claude precisa de uma chave de API (console.anthropic.com).\n\n"
-                                "Sem chave, escolha 'Assistente local (offline)' em Modo.")
             return
         self._escrever(self.t_assist, "")
         self._estado_assist = "pendente"
         self._pintar_etapas(None)
 
         def trabalho():
-            return assistente.gerar(modo, pedido, chave=chave, modelo=modelo, codigo_atual=atual,
+            return assistente.gerar(pedido,
                                     progresso=lambda m: self.fila.put(("log", None, m)))
         self._rodar("Gerando o programa .td...", trabalho, self._apos_gerar)
 
@@ -514,11 +461,6 @@ class App(tk.Tk):
         self._mostrar_texto("Referência", REFERENCIA)
 
     def _fechar(self):
-        dados = {"modo": MODOS[self.var_modo.get()], "modelo": self.var_modelo.get().strip(),
-                 "lembrar": bool(self.var_lembrar.get())}
-        if self.var_lembrar.get():
-            dados["chave"] = self.var_chave.get().strip()
-        config.salvar(dados)
         self.destroy()
 
 

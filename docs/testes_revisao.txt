@@ -1,35 +1,24 @@
+test_cliente_externo_removido (tests.test_assistente.TestAssistente.test_cliente_externo_removido) ... ok
+test_gerar_sem_rede (tests.test_assistente.TestAssistente.test_gerar_sem_rede) ... ok
+test_pedido_vazio (tests.test_assistente.TestAssistente.test_pedido_vazio) ... ok
+test_cena_casa_arvore_sol (tests.test_assistente_local.TestAssistenteLocal.test_cena_casa_arvore_sol) ... ok
+test_diagonal_e_rejeitada_com_motivo (tests.test_assistente_local.TestAssistenteLocal.test_diagonal_e_rejeitada_com_motivo) ... ok
+test_figura_que_nao_cabe_e_descartada_com_nota (tests.test_assistente_local.TestAssistenteLocal.test_figura_que_nao_cabe_e_descartada_com_nota) ... ok
+test_fuzz_sempre_gera_programa_valido (tests.test_assistente_local.TestAssistenteLocal.test_fuzz_sempre_gera_programa_valido) ... ok
+test_gerar_local_devolve_resultado_validado (tests.test_assistente_local.TestAssistenteLocal.test_gerar_local_devolve_resultado_validado) ... ok
+test_linha_vertical_com_extremos (tests.test_assistente_local.TestAssistenteLocal.test_linha_vertical_com_extremos) ... ok
+test_pedido_nao_entendido (tests.test_assistente_local.TestAssistenteLocal.test_pedido_nao_entendido) ... ok
+test_ponta_a_ponta_pixel_vermelho_no_lugar_certo (tests.test_assistente_local.TestAssistenteLocal.test_ponta_a_ponta_pixel_vermelho_no_lugar_certo) ... skipped 'compilador C indisponível'
+test_posicao_nomeada_canto (tests.test_assistente_local.TestAssistenteLocal.test_posicao_nomeada_canto) ... ok
+test_retangulo_com_cor_medidas_e_posicao (tests.test_assistente_local.TestAssistenteLocal.test_retangulo_com_cor_medidas_e_posicao) ... ok
+test_retangulo_preenchido_vira_linhas (tests.test_assistente_local.TestAssistenteLocal.test_retangulo_preenchido_vira_linhas) ... ok
+test_tela_explicita_e_posicao_nomeada (tests.test_assistente_local.TestAssistenteLocal.test_tela_explicita_e_posicao_nomeada) ... ok
+test_valores_enormes_sao_ajustados_e_continuam_validos (tests.test_assistente_local.TestAssistenteLocal.test_valores_enormes_sao_ajustados_e_continuam_validos) ... ok
 test_estrutura_do_c (tests.test_geracao.TestGeracao.test_estrutura_do_c) ... ok
 test_exemplos_invalidos_sao_rejeitados (tests.test_geracao.TestGeracao.test_exemplos_invalidos_sao_rejeitados) ... ok
 test_exemplos_validos_compilam_sem_warnings (tests.test_geracao.TestGeracao.test_exemplos_validos_compilam_sem_warnings) ... skipped 'compilador C indisponível'
 test_ponta_a_ponta_cores_e_sobreposicao (tests.test_geracao.TestGeracao.test_ponta_a_ponta_cores_e_sobreposicao) ... skipped 'compilador C indisponível'
 test_gerar_com_assistente_local_ate_a_imagem (tests.test_gui_smoke.TestGuiFumaca.test_gerar_com_assistente_local_ate_a_imagem) ... skipped 'defina TINYDRAW_TESTE_GUI=1 para testar a interface'
-test_chave_invalida_401 (tests.test_ia_claude.TestChamadaApi.test_chave_invalida_401) ... ok
-test_continuar_do_desenho_atual_envia_o_codigo (tests.test_ia_claude.TestChamadaApi.test_continuar_do_desenho_atual_envia_o_codigo) ... ok
-test_desiste_depois_de_tres_tentativas_mas_mantem_o_codigo (tests.test_ia_claude.TestChamadaApi.test_desiste_depois_de_tres_tentativas_mas_mantem_o_codigo) ... ok
-test_laco_de_correcao_devolve_diagnosticos_do_compilador (tests.test_ia_claude.TestChamadaApi.test_laco_de_correcao_devolve_diagnosticos_do_compilador) ... ok
-test_requisicao_montada_corretamente (tests.test_ia_claude.TestChamadaApi.test_requisicao_montada_corretamente) ... ok
-test_resposta_cortada_por_tamanho (tests.test_ia_claude.TestChamadaApi.test_resposta_cortada_por_tamanho) ... ok
-test_sem_chave (tests.test_ia_claude.TestChamadaApi.test_sem_chave) ... ok
-test_sem_rede (tests.test_ia_claude.TestChamadaApi.test_sem_rede) ... ok
-test_bloco_cercado (tests.test_ia_claude.TestExtracao.test_bloco_cercado) ... ok
-test_bloco_sem_linguagem (tests.test_ia_claude.TestExtracao.test_bloco_sem_linguagem) ... ok
-test_exemplo_do_prompt_de_sistema_e_valido_no_compilador (tests.test_ia_claude.TestExtracao.test_exemplo_do_prompt_de_sistema_e_valido_no_compilador) ... ok
-test_sem_bloco_usa_o_texto_todo (tests.test_ia_claude.TestExtracao.test_sem_bloco_usa_o_texto_todo) ... ok
-test_modo_local_nao_usa_rede (tests.test_ia_claude.TestFachada.test_modo_local_nao_usa_rede) ... ok
-test_pedido_vazio (tests.test_ia_claude.TestFachada.test_pedido_vazio) ... ok
-test_cena_casa_arvore_sol (tests.test_ia_local.TestAssistenteLocal.test_cena_casa_arvore_sol) ... ok
-test_diagonal_e_rejeitada_com_motivo (tests.test_ia_local.TestAssistenteLocal.test_diagonal_e_rejeitada_com_motivo) ... ok
-test_figura_que_nao_cabe_e_descartada_com_nota (tests.test_ia_local.TestAssistenteLocal.test_figura_que_nao_cabe_e_descartada_com_nota) ... ok
-test_fuzz_sempre_gera_programa_valido (tests.test_ia_local.TestAssistenteLocal.test_fuzz_sempre_gera_programa_valido) ... ok
-test_gerar_local_devolve_resultado_validado (tests.test_ia_local.TestAssistenteLocal.test_gerar_local_devolve_resultado_validado) ... ok
-test_linha_vertical_com_extremos (tests.test_ia_local.TestAssistenteLocal.test_linha_vertical_com_extremos) ... ok
-test_pedido_nao_entendido (tests.test_ia_local.TestAssistenteLocal.test_pedido_nao_entendido) ... ok
-test_ponta_a_ponta_pixel_vermelho_no_lugar_certo (tests.test_ia_local.TestAssistenteLocal.test_ponta_a_ponta_pixel_vermelho_no_lugar_certo) ... skipped 'compilador C indisponível'
-test_posicao_nomeada_canto (tests.test_ia_local.TestAssistenteLocal.test_posicao_nomeada_canto) ... ok
-test_retangulo_com_cor_medidas_e_posicao (tests.test_ia_local.TestAssistenteLocal.test_retangulo_com_cor_medidas_e_posicao) ... ok
-test_retangulo_preenchido_vira_linhas (tests.test_ia_local.TestAssistenteLocal.test_retangulo_preenchido_vira_linhas) ... ok
-test_tela_explicita_e_posicao_nomeada (tests.test_ia_local.TestAssistenteLocal.test_tela_explicita_e_posicao_nomeada) ... ok
-test_valores_enormes_sao_ajustados_e_continuam_validos (tests.test_ia_local.TestAssistenteLocal.test_valores_enormes_sao_ajustados_e_continuam_validos) ... ok
 test_caractere_invalido (tests.test_lexer.TestLexer.test_caractere_invalido) ... ok
 test_comentario_e_posicao (tests.test_lexer.TestLexer.test_comentario_e_posicao) ... ok
 test_numero_negativo_e_lexicamente_invalido (tests.test_lexer.TestLexer.test_numero_negativo_e_lexicamente_invalido) ... ok
@@ -61,7 +50,6 @@ test_cli_ast_redirecionada_cp1252 (tests.test_regressoes.TestRegressoes.test_cli
 test_cli_falha_gravando_saida (tests.test_regressoes.TestRegressoes.test_cli_falha_gravando_saida) ... ok
 test_cli_fonte_nao_utf8 (tests.test_regressoes.TestRegressoes.test_cli_fonte_nao_utf8) ... ok
 test_compilador_que_nao_inicia_ou_expira (tests.test_regressoes.TestRegressoes.test_compilador_que_nao_inicia_ou_expira) ... ok
-test_config_json_que_nao_e_objeto (tests.test_regressoes.TestRegressoes.test_config_json_que_nao_e_objeto) ... ok
 test_executavel_ausente (tests.test_regressoes.TestRegressoes.test_executavel_ausente) ... ok
 test_inteiro_muito_longo_vira_diagnostico (tests.test_regressoes.TestRegressoes.test_inteiro_muito_longo_vira_diagnostico) ... ok
 test_origem_multilinha_nao_quebra_comentario_c (tests.test_regressoes.TestRegressoes.test_origem_multilinha_nao_quebra_comentario_c) ... ok
@@ -90,6 +78,6 @@ test_tela_zero (tests.test_semantica.TestSemantica.test_tela_zero) ... ok
 test_usar_cor_nao_declarada (tests.test_semantica.TestSemantica.test_usar_cor_nao_declarada) ... ok
 
 ----------------------------------------------------------------------
-Ran 90 tests in 0.741s
+Ran 78 tests in 0.995s
 
 OK (skipped=7)

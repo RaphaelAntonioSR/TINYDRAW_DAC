@@ -7,6 +7,8 @@ import shutil
 import tempfile
 import time
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
 CC = shutil.which("gcc") or shutil.which("cc") or shutil.which("clang")
 ATIVO = bool(os.environ.get("TINYDRAW_TESTE_GUI"))
@@ -16,12 +18,14 @@ ATIVO = bool(os.environ.get("TINYDRAW_TESTE_GUI"))
 @unittest.skipIf(CC is None, "compilador C indisponível")
 class TestGuiFumaca(unittest.TestCase):
     def test_gerar_com_assistente_local_ate_a_imagem(self):
-        os.environ["HOME"] = os.environ["USERPROFILE"] = tempfile.mkdtemp()
         from tinydraw import gui
+        saida = tempfile.TemporaryDirectory()
+        self.addCleanup(saida.cleanup)
+        destino = patch.object(gui.caminhos, "pasta_saida_padrao", return_value=Path(saida.name))
+        destino.start()
+        self.addCleanup(destino.stop)
         app = gui.App()
         try:
-            app.var_modo.set("Assistente local (offline)")
-            app._atualizar_modo()
             app._inserir_pedido("um quadrado vermelho de lado 5 em 2, 2")
             app.acao_gerar()
             limite = time.time() + 60

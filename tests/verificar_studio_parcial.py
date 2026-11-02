@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from tinydraw import gui, config, imagem
+from tinydraw import gui, imagem
 
 def esperar(app):
     fim = time.monotonic() + 10
@@ -19,16 +19,16 @@ def esperar(app):
     app.update()
 
 with tempfile.TemporaryDirectory() as tmp:
-    with patch.object(config, 'ARQUIVO', Path(tmp) / 'config.json'), \
-         patch.object(gui.caminhos, 'pasta_saida_padrao', return_value=Path(tmp)), \
+    with patch.object(gui.caminhos, 'pasta_saida_padrao', return_value=Path(tmp)), \
          patch('tinydraw.executor.achar_compilador_c', return_value=None), \
          patch.object(gui.messagebox, 'showwarning'), \
          patch.object(gui.messagebox, 'showerror') as erros:
         app = gui.App()
         try:
             app.update()
-            app.var_modo.set('Assistente local (offline)')
-            app._atualizar_modo()
+            assert not hasattr(app, "var_chave")
+            assert not hasattr(app, "var_modelo")
+            assert not hasattr(app, "var_modo")
             app._inserir_pedido('um quadrado vermelho de lado 5 em 2, 2')
             app.acao_gerar()
             esperar(app)

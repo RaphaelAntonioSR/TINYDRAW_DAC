@@ -1,5 +1,5 @@
 """Assistente local (offline): interpreta pedidos simples em português, por regras, e escreve
-um programa TinyDraw. Não usa internet nem IA externa.
+um programa TinyDraw. Não usa internet nem modelos de linguagem.
 
 Entende: tela, retângulo/quadrado (contorno ou preenchido), moldura, linha, ponto, círculo,
 triângulo, sol, casa e árvore; cores; medidas ("10 por 5", "lado 6", "raio 4"); posições

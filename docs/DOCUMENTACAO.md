@@ -153,7 +153,7 @@ texto .td ──► lexer.py ──► tokens ──► parser.py ──► AST 
 | `parser.py` | Descendente recursivo LL(1) |
 | `semantica.py` | `TabelaDeSimbolos` e `Analisador` (regras S1–S15) |
 | `codegen.py` | Gera C; atribui um símbolo ASCII por cor |
-| `compilador.py` | `transpilar(texto) -> Resultado` (API usada pela CLI e pelos testes) |
+| `compilador.py` | `transpilar(texto) -> Resultado` (interface usada pela CLI e pelos testes) |
 | `cli.py` / `__main__.py` | Linha de comando, chamada ao `gcc`, execução |
 | `runtime/tinydraw.[ch]` | Biblioteca C da equipe: matriz de pixels, paleta, PPM, ASCII |
 
@@ -260,7 +260,7 @@ Todos devem saber explicar **todas** as partes: a nota depende da verificação 
 
 ---
 
-## 13. Extensão opcional: TinyDraw Studio (interface + assistente em linguagem natural)
+## 13. Extensão opcional: TinyDraw Studio (interface + assistente local por regras)
 
 ### 13.1 Motivação e limites
 O Studio facilita a demonstração: o usuário descreve o desenho em português e vê o programa `.td`, o C gerado,
@@ -275,23 +275,10 @@ Assim, "os dados, comandos e comportamentos apresentados" vêm do programa-fonte
 
 ```
 pedido (pt) --> assistente --> programa .td --> lexer --> parser --> semântica --> codegen --> .c --> gcc --> exe --> .ppm
-                 |-- IA Claude (API)  <-- diagnósticos do compilador (3 tentativas totais)
                  `-- local (regras, sem internet)
 ```
 
-### 13.3 Assistente com IA (modo "IA Claude")
-* Cliente HTTP mínimo (`urllib`) para a API Messages da Anthropic (`POST /v1/messages`, cabeçalhos `x-api-key` e
-  `anthropic-version`). O *prompt de sistema* ensina a gramática, as regras semânticas, as convenções e técnicas
-  de composição (preencher = linhas empilhadas; círculo = linhas de larguras variáveis); o exemplo do prompt é
-  validado pelo compilador em um teste automatizado.
-* **Laço de autocorreção:** programa rejeitado -> diagnósticos (linha, coluna, motivo) voltam à IA -> nova tentativa.
-  Após 3 tentativas o último código fica no editor para ajuste manual.
-* Opção "continuar do desenho atual": envia o programa do editor para a IA alterá-lo.
-* Segurança: a chave só é gravada se o usuário permitir; o `salvar` aceita apenas nome simples `.ppm` (regra S12),
-  impedindo que um programa gerado escreva em outras pastas; strings do programa são escapadas no C gerado.
-  Privacidade: o pedido (e o programa, se "continuar") é enviado à API.
-
-### 13.4 Assistente local (modo offline)
+### 13.3 Assistente local (modo offline)
 Interpretador por regras (expressões regulares sobre texto normalizado, sem acentos): reconhece figuras
 (retângulo, quadrado, moldura, linha, ponto, círculo, triângulo, sol, casa, árvore), cores, medidas
 (`10 por 5`, `lado`, `raio`, `base`...), preenchimento e posições (`em 3, 4`, `no centro`, cantos...). Convenção:
@@ -301,34 +288,30 @@ distribuição horizontal das figuras sem posição, ajuste para caber); (5) emi
 sem comando próprio são compostas de comandos existentes (disco = linhas horizontais; triângulo = linhas empilhadas).
 Valores fora da tela são ajustados e registrados no log do assistente.
 
-### 13.5 Arquitetura dos módulos novos
+### 13.4 Arquitetura dos módulos novos
 | Módulo | Responsabilidade |
 |---|---|
-| `assistente.py` | Fachada `gerar(modo, pedido, ...)`; tipos `ResultadoGeracao` e `ErroAssistente` |
-| `ia_claude.py` | Prompt de sistema, cliente da API, extração do bloco de código, laço de correção |
-| `ia_local.py` | Interpretador por regras, layout e emissão do `.td` |
+| `assistente.py` | Fachada `gerar(pedido, progresso=...)`; tipos `ResultadoGeracao` e `ErroAssistente` |
+| `assistente_local.py` | Interpretador por regras, layout e emissão do `.td` |
 | `executor.py` | Localiza o gcc (variável `CC`, pasta `gcc\` ao lado do .exe, PATH), compila e executa |
 | `pipeline.py` | `executar_programa` (do `.td` à imagem), `etapas`, diagnóstico e autoteste |
 | `imagem.py` | Leitura de PPM e escrita de PNG (sem bibliotecas externas) |
 | `caminhos.py` | Localiza `runtime/` e `exemplos/` dentro ou fora do .exe (PyInstaller) |
 | `gui.py` | Interface tkinter: editor, abas, barra de etapas, trabalho em segundo plano (thread + fila) |
-| `config.py` | Preferências do usuário |
 
-### 13.6 Testes da extensão
-`test_ia_local.py` (pedidos específicos; **400 pedidos aleatórios** que precisam gerar programa aceito pelo
-compilador; ponta a ponta conferindo um pixel), `test_ia_claude.py` (requisição montada corretamente, laço de
-correção, 3 tentativas, chave inválida 401, sem rede, resposta cortada — tudo com respostas simuladas, sem rede),
+### 13.5 Testes da extensão
+`test_assistente_local.py` (pedidos específicos; **400 pedidos aleatórios** que precisam gerar programa aceito pelo
+compilador; ponta a ponta conferindo um pixel),
 `test_pipeline.py` (estados das etapas, imagem antiga nunca reaproveitada, PNG, autoteste) e `test_gui_smoke.py`
 (abre a janela, gera pelo assistente local e confere a imagem; opcional). Testes de mutação eram mencionados no documento original, mas não foram reproduzidos nesta revisão; não são evidência validada.
 
-### 13.7 Empacotamento
+### 13.6 Empacotamento
 `construir_exe.bat` usa PyInstaller (`--onefile --windowed`) levando `runtime/` e `exemplos/` dentro do executável.
 O .exe depende do gcc do computador (ou de `gcc\bin\gcc.exe` ao lado dele). `TinyDrawStudio.exe --autoteste` e
 *Ajuda -> Diagnóstico* verificam o ambiente.
 
-### 13.8 Limitações
-O assistente local não entende frases livres; a IA depende de chave, rede e custo por uso e pode errar (por isso o
-compilador a valida); o Studio não faz desfazer/refazer do desenho (o editor tem Ctrl+Z para o texto).
+### 13.7 Limitações
+O assistente local reconhece um vocabulário limitado; o Studio não faz desfazer/refazer do desenho (o editor tem Ctrl+Z para o texto).
 
 ## Notas da revisão
 

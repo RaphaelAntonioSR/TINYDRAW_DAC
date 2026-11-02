@@ -85,11 +85,11 @@ o mesmo transpilador valida esse texto. Eles não produzem a imagem diretamente.
 tinydraw/
   lexer.py, parser.py, ast_nodes.py     reconhecimento e AST
   semantica.py, codegen.py              validação e emissão C
-  compilador.py, erros.py               API e diagnósticos
+  compilador.py, erros.py               Interface interna e diagnósticos
   cli.py, __main__.py, executor.py      arquivos, compilação e execução
   gui.py, pipeline.py                   Studio e fluxo até a prévia
-  assistente.py, ia_local.py, ia_claude.py
-  imagem.py, caminhos.py, config.py     PNG, recursos e preferências
+  assistente.py, assistente_local.py
+  imagem.py, caminhos.py                PNG e localização de recursos
 runtime/                               biblioteca C e cabeçalho
 exemplos/validos/, exemplos/invalidos/  demonstrações
 tests/                                 testes unittest
@@ -102,7 +102,7 @@ executar_studio.bat, construir_exe.bat  atalhos Windows
 ## Dependências e instalação no Windows
 
 O projeto usa a biblioteca padrão do Python, incluindo `re`, `dataclasses`,
-`subprocess`, `tkinter`, `urllib`, `struct` e `zlib`. A referência desta revisão
+`subprocess`, `tkinter`, `struct` e `zlib`. A referência desta revisão
 é Python 3.12.14; não foi certificada uma matriz de versões. PyInstaller é
 necessário apenas para empacotar. O GCC precisa aceitar C99.
 
@@ -165,7 +165,7 @@ tabela e C em `build/estudo/`; ele não compila nem fabrica uma imagem.
 
 Abra com `py tinydraw_studio.py` ou `executar_studio.bat`. O exemplo `casa.td`
 entra no editor. Pressione F5 ou **Executar código** para processá-lo. Para
-gerar a partir de uma descrição, escolha **Assistente local (offline)**, digite
+gerar a partir de uma descrição, digite
 “um quadrado vermelho de lado 5 em 2, 2” e use **Gerar desenho** ou Ctrl+Enter.
 
 As abas mostram imagem, log/ASCII, diagnósticos, C e atividade do assistente.
@@ -179,15 +179,6 @@ medidas e posições. Preenchimentos, discos e triângulos viram combinações d
 comandos básicos; não há palavras reservadas novas para essas figuras.
 Ele pode ajustar posições/tamanhos ou descartar figuras e registra isso no log.
 Não compreende linguagem natural arbitrária.
-
-No modo **IA Claude (API)**, informe sua chave no campo ou em
-`ANTHROPIC_API_KEY`, e um modelo disponível em sua conta. As sugestões podem
-precisar de atualização conforme a [documentação de modelos da Anthropic](https://platform.claude.com/docs/en/models/overview).
-O modo envia o pedido e, se marcada a continuação, o programa atual à API.
-Fonte inválida devolve diagnósticos à IA, com no máximo três tentativas totais.
-Os testes usam respostas simuladas e não atestam acesso real ao serviço.
-“Lembrar neste PC” salva a chave em texto simples em
-`%USERPROFILE%\.tinydraw_studio.json`.
 
 ## Testes e empacotamento
 

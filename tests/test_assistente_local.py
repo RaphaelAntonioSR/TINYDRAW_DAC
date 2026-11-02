@@ -6,7 +6,7 @@ from pathlib import Path
 
 from tinydraw.assistente import ErroAssistente
 from tinydraw.compilador import transpilar
-from tinydraw.ia_local import gerar_local, interpretar
+from tinydraw.assistente_local import gerar_local, interpretar
 from tinydraw.imagem import ler_ppm
 from tinydraw.pipeline import executar_programa
 
