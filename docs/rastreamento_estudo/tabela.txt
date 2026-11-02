@@ -1,0 +1,2 @@
+Simbolo(nome='VERMELHO', r=255, g=0, b=0, linha=2, indice=1, usada=True)
+Simbolo(nome='AZUL', r=0, g=0, b=255, linha=3, indice=2, usada=True)

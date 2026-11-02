@@ -1,0 +1,11 @@
+Programa
+  +- Tela(largura=6, altura=4)  @ 1:1
+  +- DefCor(nome='VERMELHO', r=255, g=0, b=0)  @ 2:1
+  +- DefCor(nome='AZUL', r=0, g=0, b=255)  @ 3:1
+  +- Usar(nome='VERMELHO')  @ 4:1
+  +- Retangulo(x=1, y=1, largura=4, altura=3)  @ 5:1
+  +- Linha(x1=0, y1=0, x2=5, y2=0)  @ 6:1
+  +- Usar(nome='AZUL')  @ 7:1
+  +- Linha(x1=5, y1=0, x2=5, y2=3)  @ 8:1
+  +- Ponto(x=1, y=1)  @ 9:1
+  +- Salvar(arquivo='estudo.ppm')  @ 10:1

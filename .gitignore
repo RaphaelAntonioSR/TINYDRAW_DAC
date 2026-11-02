@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+build/
+dist/
+*.spec
+autoteste.txt
+.tinydraw_studio.json

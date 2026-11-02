@@ -1,0 +1,42 @@
+Janela real com compilador ausente simulado:
+{"janela": "OK", "editor": "OK", "assistente_local": "OK", "C_na_aba": "OK", "tres_fases_de_erro": "OK", "salvar_td": "OK", "exportar_PNG_PPM_fixture": "OK", "falha_de_exportacao": "OK", "sem_compilador": "OK", "imagem_C": "NAO_TESTADA"}
+
+
+Importação de todos os módulos: OK
+exemplos\invalidos\erro_lexico.td sucesso= False tokens= 29 erros= 3 avisos= 0
+exemplos\invalidos\erro_semantico.td sucesso= False tokens= 94 erros= 12 avisos= 2
+exemplos\invalidos\erro_sintatico.td sucesso= False tokens= 24 erros= 1 avisos= 0
+exemplos\validos\casa.td sucesso= True tokens= 138 erros= 0 avisos= 0
+exemplos\validos\estudo.td sucesso= True tokens= 59 erros= 0 avisos= 0
+exemplos\validos\moldura.td sucesso= True tokens= 82 erros= 0 avisos= 0
+exemplos\validos\sobreposicao.td sucesso= True tokens= 63 erros= 0 avisos= 0
+AST estudo:
+Programa
+  +- Tela(largura=6, altura=4)  @ 1:1
+  +- DefCor(nome='VERMELHO', r=255, g=0, b=0)  @ 2:1
+  +- DefCor(nome='AZUL', r=0, g=0, b=255)  @ 3:1
+  +- Usar(nome='VERMELHO')  @ 4:1
+  +- Retangulo(x=1, y=1, largura=4, altura=3)  @ 5:1
+  +- Linha(x1=0, y1=0, x2=5, y2=0)  @ 6:1
+  +- Usar(nome='AZUL')  @ 7:1
+  +- Linha(x1=5, y1=0, x2=5, y2=3)  @ 8:1
+  +- Ponto(x=1, y=1)  @ 9:1
+  +- Salvar(arquivo='estudo.ppm')  @ 10:1
+Primeiros tokens: [Token(tipo='TELA', lexema='tela', valor='tela', linha=1, coluna=1), Token(tipo='INT', lexema='6', valor=6, linha=1, coluna=6), Token(tipo='POR', lexema='por', valor='por', linha=1, coluna=8), Token(tipo='INT', lexema='4', valor=4, linha=1, coluna=12)] Último: Token(tipo='EOF', lexema='', valor=None, linha=11, coluna=1)
+Conversor CLI PPM sintético → PNG, dimensões, pixels, CRC e ampliação: OK
+BAT sem py: executar_studio.bat returncode= 9009 "Pressione qualquer tecla para continuar. . . \n'py' nÃ£o Ã© reconhecido como um comando interno\nou externo, um programa operÃ¡vel ou um arquivo em lotes.\n"
+BAT sem py: construir_exe.bat returncode= 1 '==========================================\n Gerando TinyDrawStudio.exe com PyInstaller\n==========================================\n[ERRO] O comando "py" nao foi encontrado. Instale o Python em python.org.\n\nPressione qualquer tecla para continuar. . . \n'
+PyInstaller: 1 C:\Users\martt\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe: No module named PyInstaller
+
+
+
+Tokens, AST, tabela e C gravados em C:\Users\martt\Documents\Codex\2026-11-02\o\outputs\tinydraw_projeto\build\estudo. GCC não foi chamado.
+
+
+CLI casa: código de saída 0, tokens/AST e C gerados em pasta de verificação.
+
+CLI casa --executar: código de saída 2 (compilador C ausente):
+análise concluída (0 aviso(s)); C gerado em: C:\Users\martt\Documents\Codex\2026-11-02\o\work\cli-casa\casa.c
+Nenhum compilador C (gcc/cc/clang) foi encontrado.
+Instale o gcc (ex.: winget install -e --id BrechtSanders.WinLibs.POSIX.UCRT) e reabra o programa.
+erro: falha ao compilar o C gerado.
